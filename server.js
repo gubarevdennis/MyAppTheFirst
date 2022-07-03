@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
-const morgan = require('morgan')
+const morgan = require('morgan');
+const { urlencoded } = require('body-parser');
 
 const app = express(); // запускаем express
 
@@ -13,6 +14,8 @@ app.listen(PORT, 'localhost', (error) => {
 });
 
 // midleware 
+app.use(express.urlencoded({extended: false})); //парсим пост запрос и вытягиваем с него инфу
+
 app.use(express.static('styles')); //даем доступ к папке styles браузеру
 
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
@@ -41,7 +44,16 @@ app.get('/contacts',(req,res) => {
 
 app.get('/posts',(req,res) => {
   const title = 'Posts'
-  res.render(createPath('posts'), {title})
+  const posts = [
+    {
+      id: '1',
+      text: 'Yohohohohanson',
+      title: 'Post title',
+      date: '05.05.67',
+      author: 'Denis',
+    },
+  ]
+  res.render(createPath('posts'), {title, posts})
 });
 
 
@@ -56,6 +68,16 @@ app.get('/posts/:id',(req,res) => {
   };
   res.render(createPath('post'), { title, post})
 });
+
+app.post('/add-post', (req,res) => {
+  const { title: title, author: author, text: text } = req.body;
+  const post = {
+    title,
+    author,
+    text
+  };
+  res.render(createPath('post'), {post, title})
+})
 
 app.get('/add-post',(req,res) => {
   const title = 'Post'
