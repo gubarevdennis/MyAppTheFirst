@@ -13,9 +13,9 @@ app.listen(PORT, 'localhost', (error) => {
 });
 
 // midleware 
-app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
-
 app.use(express.static('styles')); //даем доступ к папке styles браузеру
+
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
 
 const createPath = (page) => path.resolve(__dirname, 'ejs-views', `${page}.ejs`); // создаем путь
 
