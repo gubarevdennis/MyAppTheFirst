@@ -39,6 +39,12 @@ app.get('/contacts',(req,res) => {
   res.render(createPath('contacts'), { contacts, title })
 });
 
+app.get('/posts',(req,res) => {
+  const title = 'Posts'
+  res.render(createPath('posts'), {title})
+});
+
+
 app.get('/posts/:id',(req,res) => {
   const title = 'Post'
   const post = {
@@ -47,13 +53,8 @@ app.get('/posts/:id',(req,res) => {
     title: 'Post title',
     date: '05.05.67',
     author: 'Denis',
-  }
-  res.render(createPath('post'), { title, post} )
-});
-
-app.get('/posts',(req,res) => {
-  const title = 'Posts'
-  res.render(createPath('posts'), {title})
+  };
+  res.render(createPath('post'), { title, post})
 });
 
 app.get('/add-post',(req,res) => {
