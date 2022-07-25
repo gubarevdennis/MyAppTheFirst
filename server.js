@@ -27,7 +27,7 @@ mongoose
 
 app.listen(process.env.PORT, 'localhost', (error) => {
     error ? console.log(errorMsg(error)) : console.log(succesMsg(`listening port ${process.env.PORT}`));
-});
+}); 
 
 // midleware (промежуточный код)
 app.use(express.urlencoded({extended: false})); //парсим пост запрос и вытягиваем с него инфу
