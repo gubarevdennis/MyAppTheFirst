@@ -1,88 +1,57 @@
 const express = require('express');
-const path = require('path');
+const chalk = require('chalk')
 const morgan = require('morgan');
 const { urlencoded } = require('body-parser');
+const mongoose = require('mongoose');
+require ('dotenv').config();
+const { error } = require('console');
+const methodOverride = require('method-override'); //добавляет метод put в ui запрос
+const postRoutes = require('./routes/post-routes'); // роутер постов
+const contactRoutes = require('./routes/contact-routes'); // роутер контактов
+const createPath = require('./helpers/create-path') // импорт функции создания пути
+const postApiRoutes = require('./routes/api-post-routes') // api роутер постов
+
+const errorMsg = chalk.bgKeyword('white').redBright
+const succesMsg = chalk.bgKeyword('green').white;
 
 const app = express(); // запускаем express
 
 app.set('view engine', 'ejs'); //подключение шаблонизатора ejs
 
-const PORT = 3000;
+mongoose
+  .connect(process.env.MONGO_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true})
+  .then((res) => console.log(succesMsg('Connected to DB')))
+  .catch((error) => console.log(errorMsg(error)));
 
-app.listen(PORT, 'localhost', (error) => {
-    error ? console.log(error) : console.log(`listening port ${PORT}`);
+app.listen(process.env.PORT, 'localhost', (error) => {
+    error ? console.log(errorMsg(error)) : console.log(succesMsg(`listening port ${PORT}`));
 });
 
-// midleware 
+// midleware (промежуточный код)
 app.use(express.urlencoded({extended: false})); //парсим пост запрос и вытягиваем с него инфу
 
 app.use(express.static('styles')); //даем доступ к папке styles браузеру
 
-app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms')); // выводит доп информацию в лог
 
-const createPath = (page) => path.resolve(__dirname, 'ejs-views', `${page}.ejs`); // создаем путь
+app.use(methodOverride('_method')); // подключаем метод PUT
 
-// Запросы
+
+// Запросы (роуты)
 app.get('/',(req,res) => {
-    const title = 'Home'
-    res.render(createPath('index'), {title})
+  const title = 'Home'
+  res.render(createPath('index'), {title})
 });
 
 app.get('/about-us',(req,res) => {
-  res.redirect('/contacts')
+res.redirect('/contacts')
 });
 
-app.get('/contacts',(req,res) => {
-  const title = 'Contacts'
-  const contacts = [
-  {name: 'Mew', link: 'http://youtube.com'},
-  {name: 'Denis', link: 'http://youtube.com'},
-  {name: 'Lubov', link: 'http://youtube.com'},
-  ]
-  res.render(createPath('contacts'), { contacts, title })
-});
-
-app.get('/posts',(req,res) => {
-  const title = 'Posts'
-  const posts = [
-    {
-      id: '1',
-      text: 'Yohohohohanson',
-      title: 'Post title',
-      date: '05.05.67',
-      author: 'Denis',
-    },
-  ]
-  res.render(createPath('posts'), {title, posts})
-});
-
-
-app.get('/posts/:id',(req,res) => {
-  const title = 'Post'
-  const post = {
-    id: '1',
-    text: 'Yohohohohanson',
-    title: 'Post title',
-    date: '05.05.67',
-    author: 'Denis',
-  };
-  res.render(createPath('post'), { title, post})
-});
-
-app.post('/add-post', (req,res) => {
-  const { title: title, author: author, text: text } = req.body;
-  const post = {
-    title,
-    author,
-    text
-  };
-  res.render(createPath('post'), {post, title})
-})
-
-app.get('/add-post',(req,res) => {
-  const title = 'Post'
-  res.render(createPath('add-post'), {title})
-});
+app.use(postRoutes); // подключаем роуты постов
+app.use(contactRoutes); // подключаем роуты контактов
+app.use(postApiRoutes); // подключаем api роуты постов
 
 app.use((req,res) => {
   const title = 'Error'
