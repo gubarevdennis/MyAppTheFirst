@@ -26,7 +26,7 @@ mongoose
   .catch((error) => console.log(errorMsg(error)));
 
 app.listen(process.env.PORT, 'localhost', (error) => {
-    error ? console.log(errorMsg(error)) : console.log(succesMsg(`listening port ${PORT}`));
+    error ? console.log(errorMsg(error)) : console.log(succesMsg(`listening port ${process.env.PORT}`));
 });
 
 // midleware (промежуточный код)
