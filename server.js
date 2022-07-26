@@ -25,7 +25,7 @@ mongoose
   .then((res) => console.log(succesMsg('Connected to DB')))
   .catch((error) => console.log(errorMsg(error)));
 
-app.listen(process.env.PORT, 'localhost', (error) => {
+app.listen(process.env.PORT, (error) => {
     error ? console.log(errorMsg(error)) : console.log(succesMsg(`listening port ${process.env.PORT}`));
 }); 
 
