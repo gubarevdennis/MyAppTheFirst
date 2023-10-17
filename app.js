@@ -46,6 +46,6 @@ const server = http.createServer((req, res) => {
   });
 });
 
-server.listen(PORT, 'localhost', (error) => {
+server.listen(PORT, (error) => {
   error ? console.log(error) : console.log(`listening port ${PORT}`);
 });

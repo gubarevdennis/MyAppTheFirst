@@ -1,32 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Node.js Course</title>
-  <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
-  <style>
-    body {
-      display: flex;
-      min-height: 100vh;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      font-family: 'Roboto', sans-serif;
-      font-size: 20px;
-      background: linear-gradient(to bottom, #00d2ff, #928dab);
-      color: #fff;
-    }
-    h1 {
-      text-transform: uppercase;
-    }
-  </style>
-</head>
+  <%- include('./partials/head.ejs') %>
 <body>
-  <h1>Contacts page</h1>
-  <ul>
-    <li>Tommy</li>
-    <li>Arthur</li>
-    <li>John</li>
+  <%- include('./partials/nav.ejs') %>
+  <h1>Contacts:</h1>
+  <ul class="contacts">
+    <% if (contacts.length) { %>
+      <% contacts.forEach(({ link, name }) => { %>
+        <li>
+          <a href="<%= link %>"><%= name %></a>
+        </li>
+      <% }) %>
+    <% } %>
   </ul>
 </body>
 </html>
